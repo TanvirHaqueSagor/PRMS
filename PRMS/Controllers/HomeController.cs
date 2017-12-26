@@ -20,8 +20,8 @@ namespace PRMS.Controllers
            
                
                string email = "tanvir@gmail.com";
-                Login aLogin = new Login();
-                Boolean ch = aLogin.LoginCheck(username, password);
+               Login aLogin = new Login();
+               Boolean ch = aLogin.LoginCheck(username, password);
                     if (ch == true)
                     {
                        

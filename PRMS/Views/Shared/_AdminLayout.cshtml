@@ -4,7 +4,7 @@
 
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Patuakhali Science & Technology University</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -12,7 +12,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Student Result Management System | Dashboard</title>
+    <title>Result Management System | Dashboard</title>
 
     <link rel="stylesheet" href="../stylesheets/main.css" media="screen">
     <link rel="stylesheet" href="../stylesheets/screen.css" media="screen">
@@ -178,10 +178,10 @@
                             </ul>
                             </li>
                             <li class="has-children">
-                                <a href="#"><i class="fa fa-users"></i> <span>Students</span> <i class="fa fa-angle-right arrow"></i></a>
+                                <a href="#"><i class="fa fa-users"></i> <span>Session</span> <i class="fa fa-angle-right arrow"></i></a>
                                 <ul class="child-nav">
-                                    <li><a href="add-students.php"><i class="fa fa-bars"></i> <span>Add Students</span></a></li>
-                                    <li><a href="manage-students.php"><i class="fa fa fa-server"></i> <span>Manage Students</span></a></li>
+                                    <li><span> @Html.ActionLink("Create Session", "AddSession", "Admin", routeValues: null, htmlAttributes: new { id = "addSessionLink" })</span> </li>
+                                    <li><span> @Html.ActionLink("Manage Session", "ManageSession", "Admin", routeValues: null, htmlAttributes: new { id = "manageSessionLink" })</span> </li>
 
                                 </ul>
                             </li>

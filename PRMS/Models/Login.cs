@@ -17,11 +17,10 @@ namespace PSTU_RESULT.Models
 
         public Boolean LoginCheck(string username, string password)
         {
-            string query = "Select * from [Login].[dbo].[adminInfo] where Username = '" + username + "' and Password = '" + password + "'";
-
+            string query = "Select * from [Login].[dbo].[adminInfo] where username = '" + username + "' and password = '" + password + "'";
+            SqlConnection aSqlConnection = new SqlConnection(connectionString);
             try
             {
-                SqlConnection aSqlConnection = new SqlConnection(connectionString);
                 aSqlConnection.Open();
                 SqlCommand aCommand = new SqlCommand(query, aSqlConnection);
 
@@ -29,7 +28,7 @@ namespace PSTU_RESULT.Models
 
                 if (aReader.Read())
                 {
-                    aSqlConnection.Close();
+                    //aSqlConnection.Close();
                     return true;
                 }
 
@@ -37,10 +36,10 @@ namespace PSTU_RESULT.Models
             catch (Exception e)
             {
 
-
             }
-
-           // aSqlConnection.Close();
+            finally {
+                aSqlConnection.Close();
+            }
             return false;
 
         }
