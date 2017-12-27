@@ -8,6 +8,7 @@ using OfficeOpenXml;
 using System.Configuration;
 using System.Data.SqlClient;
 using PRMS.Models;
+using System.Web.Configuration;
 
 namespace PRMS.Controllers
 {
@@ -24,6 +25,27 @@ namespace PRMS.Controllers
 
         public ActionResult AddTeacher()
         {
+            List<String> faculties = new List<String>();
+            string connectionString = WebConfigurationManager.ConnectionStrings["prmsDbConnectionString"].ConnectionString;
+            string query = string.Format("SELECT *  FROM [prms].[dbo].[faculties]");
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        faculties.Add(   reader.GetString(1)  );
+                    }
+                }
+                con.Close();
+            }
+
+            ViewBag.faculties = faculties;
+
             return View();
 
         }
@@ -114,5 +136,33 @@ namespace PRMS.Controllers
             return View();
 
         }
+
+
+        public JsonResult GetDepartment(string faculty)
+        {
+            List<String> faculties = new List<String>();
+           
+
+            string connectionString = WebConfigurationManager.ConnectionStrings["prmsDbConnectionString"].ConnectionString;
+            string query = string.Format("SELECT *  FROM [prms].[dbo].[departments] WHERE faculty='"+faculty+"'");
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        faculties.Add(   reader.GetString(1) );
+                    }
+                }
+                con.Close();
+            }
+
+            return Json(faculties, JsonRequestBehavior.AllowGet);
+        }
+
 	}
 }
