@@ -7,6 +7,7 @@ namespace PRMS.Models
 {
     public class StudentInfo
     {
+        //student information for create session
         public string name { get; set; }
         public string fathers_name { get; set; }
         public string mothers_name { get; set; }
