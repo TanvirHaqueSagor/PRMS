@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<PRMS.Models.Teacher>
 @{
     ViewBag.Title = "TeachersList";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
@@ -16,7 +16,7 @@
     <div class="row breadcrumb-div">
         <div class="col-md-6">
             <ul class="breadcrumb">
-                <li><a href="dashboard.php"><i class="fa fa-home"></i> Home</a></li>
+                <li><a href="@Url.Action("Index", "Admin")"><i class="fa fa-home"></i> Admin</a></li>
                 <li> Teachers Corner</li>
                 <li class="active">Manage Teacher</li>
             </ul>
@@ -56,36 +56,63 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Class Name</th>
-                                    <th>Class Name Numeric</th>
-                                    <th>Section</th>
-                                    <th>Creation Date</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Faculty</th>
+                                    <th>Password</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>Teacher Name</th>
-                                    <th>Email </th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
                                     <th>Faculty</th>
-                                    <th>Department</th>
+                                    <th>Password</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
                             <tbody>
                                 
-                                <tr>
-                                    <td>ok</td>
-                                    <td>ok</td>
-                                    <td>ok</td>
-                                    <td>ok</td>
-                                    <td>ok</td>
-                                    <td>
-                                        <a href="edit-class.php?classid=<?php echo htmlentities($result->id);?>"><i class="fa fa-edit" title="Edit Record"></i> </a>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TeacherID)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Mobile)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Faculty)
+                                        </td>
+                                        
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Password)
+                                        </td>
+                                        <td>
 
-                                    </td>
-                                </tr>
+      <span>      @Html.ActionLink("Edit","Edit", "Admin", new { id = item.TeacherID }, new { @class = "btn btn-primary btn-small " }) </span>
+        <span>      @Html.ActionLink("Delete", "Delete", "Admin", new { id = item.TeacherID },
+                                                                                            new { onclick = "return confirm('Are you sure you wish to delete this Teacher?');", @class = "btn btn-danger btn-small" }) </span>
+
+             <span>      @Html.ActionLink("Detail", "Detail", "Admin", new { id = item.TeacherID }, new { @class = "btn btn-info btn-small " }) </span>
+
+
+</td>
+
+
+                                    </tr>
+                                }
                                 
 
 

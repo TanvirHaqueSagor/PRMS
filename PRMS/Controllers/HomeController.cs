@@ -1,4 +1,5 @@
-﻿using PSTU_RESULT.Models;
+﻿using PRMS.Models;
+using PSTU_RESULT.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,15 @@ namespace PRMS.Controllers
        
         public ActionResult Index(string usertype,string username, string password)
         {
+            try { 
+           username= username.Replace(" ", String.Empty);
+             password=   password.Replace(" ", String.Empty);
+            }
+            catch (NullReferenceException e)
+            {
+
+            }
+
             if (username != null && password != null)
             {
 
@@ -33,12 +43,17 @@ namespace PRMS.Controllers
                 {
                     ViewBag.username = username;
                     ViewBag.password = password;
+                    
                     Login aLogin = new Login();
-                    Boolean ch = aLogin.LoginCheck(username, password);
-                    if (ch == true)
-                    {
+                    Teacher teacher= aLogin.TeacherLoginCheck(username);
+                    if (teacher.PasswordChanged == true) { 
+                        password = new EncryptionDectryption().Encryptdata(password);
+                    }
 
-                        return View();
+                    if (teacher.Email ==username && teacher.Password==password)
+                    {
+                        HttpContext.Session["teacher"] = teacher;
+                        return RedirectToAction("Index", "Teacher");
                     }
 
                 }

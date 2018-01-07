@@ -1,16 +1,20 @@
-﻿using System;
+﻿using PRMS.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
+
+using System.Data.Entity;
+
 namespace PSTU_RESULT.Models
 {
     public class Login
     {
 
 
-
+        private ProjectDB db = new ProjectDB(); 
 
 
         string connectionString = WebConfigurationManager.ConnectionStrings["LoginDbConnectionString"].ConnectionString;
@@ -43,5 +47,28 @@ namespace PSTU_RESULT.Models
             return false;
 
         }
+
+
+
+
+        public Teacher TeacherLoginCheck(string username)
+        {
+
+            Teacher teacher = new Teacher();
+               // Teacher teacher = db.Teacher.FindAsync
+            try
+            {
+               teacher = db.Teacher.Single(p => p.Email == username);
+            } catch(InvalidOperationException){
+
+            }
+            
+
+            return teacher;
+
+        }
+
+
+
     }
 }

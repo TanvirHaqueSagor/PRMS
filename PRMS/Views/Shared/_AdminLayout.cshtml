@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Result Management System | Dashboard</title>
-
+    
     <link rel="stylesheet" href="../stylesheets/main.css" media="screen">
     <link rel="stylesheet" href="../stylesheets/screen.css" media="screen">
     <link rel="stylesheet" href="../stylesheets/bootstrap.css" media="screen">
@@ -162,17 +162,25 @@
                                 <li class="has-children">
                                     <a href="#"><i class="fa fa-file-text"></i> <span>Teachers Corner</span> <i class="fa fa-angle-right arrow"></i></a>
                                     <ul class="child-nav">
-                                        
+
                                         <li><span> @Html.ActionLink("Add Teacher", "AddTeacher", "Admin", routeValues: null, htmlAttributes: new { id = "addTeacherLink" })</span> </li>
                                         <li><span> @Html.ActionLink("Manage Teacher", "TeachersList", "Admin", routeValues: null, htmlAttributes: new { id = "manageTeacherLink" })</span> </li>
 
                                     </ul>
                                 </li>
                                 <li class="has-children">
-                                    <a href="#"><i class="fa fa-file-text"></i> <span>Add Semester</span> <i class="fa fa-angle-right arrow"></i></a>
+                                    <a href="#"><i class="fa fa-file-text"></i> <span>Faculties</span> <i class="fa fa-angle-right arrow"></i></a>
                                     <ul class="child-nav">
-                                        <li><span> @Html.ActionLink("Create Semester", "AddSemesters", "Admin", routeValues: null, htmlAttributes: new { id = "addTeacherLink" })</span> </li>
-                                        <li><span> @Html.ActionLink("Manage Semester", "TeachersList", "Admin", routeValues: null, htmlAttributes: new { id = "manageTeacherLink" })</span> </li>
+                                        <li><span> @Html.ActionLink("Add Faculty", "AddFaculty", "Faculty", routeValues: null, htmlAttributes: new { id = "addTeacherLink" })</span> </li>
+                                        <li><span> @Html.ActionLink("Manage Faculty", "ManageFaculty", "Faculty", routeValues: null, htmlAttributes: new { id = "manageTeacherLink" })</span> </li>
+
+                                </li>
+                            </ul>
+                                <li class="has-children">
+                                    <a href="#"><i class="fa fa-file-text"></i> <span>Department</span> <i class="fa fa-angle-right arrow"></i></a>
+                                    <ul class="child-nav">
+                                        <li><span> @Html.ActionLink("Add Department", "AddDepartment", "Department", routeValues: null, htmlAttributes: new { id = "addTeacherLink" })</span> </li>
+                                        <li><span> @Html.ActionLink("Manage Department", "ManageDepartment", "Department", routeValues: null, htmlAttributes: new { id = "manageTeacherLink" })</span> </li>
 
                                 </li>
                             </ul>
@@ -185,6 +193,16 @@
 
                                 </ul>
                             </li>
+
+                            <li class="has-children">
+                                <a href="#"><i class="fa fa-file-text"></i> <span>Enrollment</span> <i class="fa fa-angle-right arrow"></i></a>
+                                <ul class="child-nav">
+                                    <li><span> @Html.ActionLink("Enrollment Student", "Index", "Enrollment", routeValues: null, htmlAttributes: new { id = "addTeacherLink" })</span> </li>
+                                    <li><span> @Html.ActionLink("Manage Faculty", "ManageFaculty", "Faculty", routeValues: null, htmlAttributes: new { id = "manageTeacherLink" })</span> </li>
+
+                            </li>
+                            </ul>
+
                             <li class="has-children">
                                 <a href="#"><i class="fa fa-info-circle"></i> <span>Result</span> <i class="fa fa-angle-right arrow"></i></a>
                                 <ul class="child-nav">

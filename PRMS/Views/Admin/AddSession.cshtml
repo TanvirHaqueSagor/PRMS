@@ -1,23 +1,86 @@
 ﻿
 @{
     ViewBag.Title = "AddSession";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+    
 
-<h2>Add New Session</h2>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-</head>
-<body>
-    @using (Html.BeginForm("AddSession", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        <input type="file" name="postedFile" />
-        <input type="submit" value="Import" />
-    }
-    @if (ViewBag.Message != null)
-    {
-        <h4>@ViewBag.Message</h4>
-    }
-</body>
-</html>
+
+
+
+<div class="container-fluid">
+    <div class="row page-title-div">
+        <div class="col-md-6">
+            <h2 class="title">Add New Session</h2>
+
+        </div>
+
+        <!-- /.col-md-6 text-right -->
+    </div>
+    <!-- /.row -->
+    <div class="row breadcrumb-div">
+        <div class="col-md-6">
+            <ul class="breadcrumb">
+                <li><a href="@Url.Action("Index", "Admin")"><i class="fa fa-home"></i> Admin</a></li>
+                <li> Session</li>
+                <li class="active">Add New Session</li>
+            </ul>
+        </div>
+
+    </div>
+    <!-- /.row -->
+</div>
+
+<section class="section">
+    <div class="container-fluid">
+
+
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="panel">
+
+
+
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h5>Insert a Excel file of Semester Info</h5>
+                        </div>
+                    </div>
+
+
+                  
+                    <div class="panel-body p-20">
+
+                        @using (Html.BeginForm("AddSession", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input type="file" name="postedFile" />
+                            <input type="submit" value="Import" />
+                        }
+                        @if (ViewBag.Message != null)
+                        {
+                            <h4>@ViewBag.Message</h4>
+                        }
+
+
+
+
+
+
+                        <!-- /.col-md-12 -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-md-6 -->
+
+
+        </div>
+        <!-- /.col-md-12 -->
+    </div>   
+
+
+
+
+
 

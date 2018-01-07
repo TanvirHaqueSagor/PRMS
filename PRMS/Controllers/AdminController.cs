@@ -9,11 +9,16 @@ using System.Configuration;
 using System.Data.SqlClient;
 using PRMS.Models;
 using System.Web.Configuration;
+using System.Net;
+using System.Data.Entity;
 
 namespace PRMS.Controllers
 {
     public class AdminController : Controller
     {
+
+        private ProjectDB db = new ProjectDB(); 
+        
         //
         // GET: /Admin/
         public ActionResult Index(string username,string email)
@@ -22,49 +27,119 @@ namespace PRMS.Controllers
             ViewBag.email = email;
             return View();
         }
+        public ActionResult AddTeacher(string fullanme, string emailid, string mobile, string faculty, string department)
+        {                                  //     [Bind(Include="TeacherID,Name,Email,Mobile,Faculty,Department")] Teacher teacher
+              
+            ViewBag.faculties = db.Faculty.ToList();
 
-        public ActionResult AddTeacher()
-        {
-            List<String> faculties = new List<String>();
-            string connectionString = WebConfigurationManager.ConnectionStrings["prmsDbConnectionString"].ConnectionString;
-            string query = string.Format("SELECT *  FROM [prms].[dbo].[faculties]");
 
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
 
-                    while (reader.Read())
-                    {
-                        faculties.Add(   reader.GetString(1)  );
-                    }
+
+                if(fullanme!=null & emailid!=null & mobile!=null & faculty !=null & department !=null ){
+
+                    Teacher teacher = new Teacher(fullanme, emailid, mobile, faculty, department, new FacultyDepartmentInfo().createRandomPassword());
+                    db.Teacher.Add(teacher);
+                    db.SaveChanges();
+
                 }
-                con.Close();
-            }
 
-            ViewBag.faculties = faculties;
+
+
 
             return View();
 
         }
-
-
         public ActionResult TeachersList()
         {
-            return View();
+               return View(db.Teacher.ToList());
 
         }
+        public ActionResult Edit(int? id)
+        {
+
+          //  return View("~/Views/Admin/EditTeacher.cshtml");
+           return RedirectToAction("EditTeacher", "Admin", new { ind = id });
+
+        }
+        public ActionResult EditTeacher(int? ind)
+        {
+            if (ind == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Teacher teacher = db.Teacher.Find(ind);
+            if (teacher == null)
+            {
+                return HttpNotFound();
+            }
+
+            FacultyDepartmentInfo facultyDeptInfo = new FacultyDepartmentInfo();
+            ViewBag.faculties = facultyDeptInfo.getFaculty();
+            return View(teacher);
+
+        }
+        [HttpPost]
+        public ActionResult EditTeacher([Bind(Include = "TeacherID,Name,Email,Mobile,Faculty,Department,Password")] Teacher teacher)
+        {
+            Teacher tcr = db.Teacher.Find(teacher.TeacherID);
+            db.Entry(tcr).State = EntityState.Detached;
+                
+                  if(tcr.PasswordChanged==true){
+                      EncryptionDectryption sc = new EncryptionDectryption();
+                       teacher.Password = sc.Encryptdata(teacher.Password);
+                       teacher.PasswordChanged = true;
+                  }
 
 
+           if (teacher.Password.Equals(tcr.Password)) { 
+           
+            if (ModelState.IsValid)
+            {                                        
+                   db.Entry(teacher).State = EntityState.Modified;
+                   db.SaveChanges();
+            }
+            
+            return RedirectToAction("TeachersList", "Admin");
+                  }
+                  else
+                  {
+                      ViewBag.Message = "Please Put the correct password";
+                      return View();
+                  }
+
+        }
+        public ActionResult Delete(int? id)
+        {
+            Teacher teacher = db.Teacher.Find(id);
+            db.Teacher.Remove(teacher);
+            db.SaveChanges();
+            return RedirectToAction("TeachersList", "Admin");
+        }
+        public ActionResult Detail(int? id)
+        {
+
+            //  return View("~/Views/Admin/EditTeacher.cshtml");
+            return RedirectToAction("TeacherDetail", "Admin", new { ind = id });
+
+        }
+        public ActionResult TeacherDetail(int? ind)
+        {
+            if (ind == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Teacher teacher = db.Teacher.Find(ind);
+            if (teacher == null)
+            {
+                return HttpNotFound();
+            }
+            return View(teacher);
+        }
         public ActionResult AddSemesters()
         {
             return View();
 
         }
-
-
         public ActionResult AddSession(FormCollection formCollection)
         {
             if (Request != null)
@@ -83,9 +158,7 @@ namespace PRMS.Controllers
                         var noOfCol = workSheet.Dimension.End.Column;
                         var noOfRow = workSheet.Dimension.End.Row;
 
-                        string constr = ConfigurationManager.ConnectionStrings["info"].ConnectionString;
-                        SqlConnection con = new SqlConnection(constr);
-                        con.Open();
+                      
 
                         for (int rowIterator = 2; rowIterator <= noOfRow; rowIterator++)
                         {
@@ -93,7 +166,7 @@ namespace PRMS.Controllers
                             info.name = workSheet.Cells[rowIterator, 1].Value.ToString();
                             info.fathers_name = workSheet.Cells[rowIterator, 2].Value.ToString();
                             info.mothers_name = workSheet.Cells[rowIterator, 3].Value.ToString();
-                            info.id = Convert.ToInt32(workSheet.Cells[rowIterator, 4].Value);
+                            info.StudentId = Convert.ToInt32(workSheet.Cells[rowIterator, 4].Value);
                             info.reg = Convert.ToInt32(workSheet.Cells[rowIterator, 5].Value);
                             info.regularity = workSheet.Cells[rowIterator, 6].Value.ToString();
                             info.hall = workSheet.Cells[rowIterator, 7].Value.ToString();
@@ -104,65 +177,45 @@ namespace PRMS.Controllers
                             info.email = workSheet.Cells[rowIterator, 12].Value.ToString();
                             info.blood = workSheet.Cells[rowIterator, 13].Value.ToString();
 
-                            SqlCommand stu_info = new SqlCommand("INSERT INTO stu_info VALUES(@name, @fathers_name, @mothers_name, @id, @reg, @regularity, @hall, @sex, @nationality, @religion, @phone, @email, @blood)", con);
 
-                            stu_info.Parameters.AddWithValue("@name", info.name);
-                            stu_info.Parameters.AddWithValue("@fathers_name", info.fathers_name);
-                            stu_info.Parameters.AddWithValue("@mothers_name", info.mothers_name);
-                            stu_info.Parameters.AddWithValue("@id", info.id);
-                            stu_info.Parameters.AddWithValue("@reg", info.reg);
-                            stu_info.Parameters.AddWithValue("@regularity", info.regularity);
-                            stu_info.Parameters.AddWithValue("@hall", info.hall);
-                            stu_info.Parameters.AddWithValue("@sex", info.sex);
-                            stu_info.Parameters.AddWithValue("@nationality", info.nationality);
-                            stu_info.Parameters.AddWithValue("@religion", info.religion);
-                            stu_info.Parameters.AddWithValue("@phone", info.phone);
-                            stu_info.Parameters.AddWithValue("@email", info.email);
-                            stu_info.Parameters.AddWithValue("@blood", info.blood);
+                          db.StudentInfo.Add(info);
+                           db.SaveChanges();
 
-                            stu_info.ExecuteNonQuery();
+
                             ViewBag.Message = "Create Session Successfully";
                         }
-                        con.Close();
+                        
                     }
                 }
             }
             return View();
 
         }
-
         public ActionResult ManageSession()
         {
             return View();
 
         }
-
-
         public JsonResult GetDepartment(string faculty)
         {
-            List<String> faculties = new List<String>();
-           
 
-            string connectionString = WebConfigurationManager.ConnectionStrings["prmsDbConnectionString"].ConnectionString;
-            string query = string.Format("SELECT *  FROM [prms].[dbo].[departments] WHERE faculty='"+faculty+"'");
 
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
 
-                    while (reader.Read())
-                    {
-                        faculties.Add(   reader.GetString(1) );
-                    }
-                }
-                con.Close();
+            List<Department> dept = db.Department.Where(b => b.Faculty == faculty).ToList(); 
+          //  db.Faculty.ToList();
+
+            List<String> departments = new List<String>();
+
+            foreach (Department dp in dept){
+                
+                    departments.Add(dp.ShortForm);
+                
             }
 
-            return Json(faculties, JsonRequestBehavior.AllowGet);
+
+            return Json(departments, JsonRequestBehavior.AllowGet);
         }
 
-	}
+        
+    }
 }
